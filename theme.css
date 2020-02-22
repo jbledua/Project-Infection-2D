@@ -1,0 +1,20 @@
+.container {
+    position: relative;
+  }
+#text {
+  position: absolute;
+  pointer-events: none;
+  left: 0px;
+  top: 0px;
+  z-index: 10;
+}
+#particles {
+  position: absolute;
+  pointer-events: none;
+  left: 0px;
+  top: 0px;
+  z-index: 2;
+}
+p {
+  color:blue;
+}
