@@ -41,10 +41,9 @@ function collision(bact1, bact2) {
 // Frame
 //---------------------------------------------------------
 
-function g_frameEventHndlr() {
+function g_frameEventHndlr() 
+{
     mainGameObj.update();
-
-
     window.requestAnimationFrame(g_frameEventHndlr);
 }
 
