@@ -35,29 +35,10 @@ class Game {
 
 
 
-        //obj.appendChild(node);
-
-        //var x = document.createElement("CANVAS");
-    //document.body.appendChild(x);
-        //*/
-
-
-        
-        //this.canvas  = document.getElementById('gameSurface');
-        
-
-	    
-	    //this.textCanvas = document.getElementById('text');
-        //this.txtCTX = this.textCanvas.getContext('2d')
-    
-	    
-	    //this.particlesCanvas = document.getElementById('particles');
-	    //this.partCTX = this.particlesCanvas.getContext('2d');
-
-
         this.frameUpdateHndlr = _frameUpdateHndlr;
         this.clickEventHndlr = _clickEventHndlr;
 
+        // Difine starting 
         this.startingLives = 4;
         this.startingBact = 9;
         this.startingScore = 0;
@@ -66,27 +47,6 @@ class Game {
         this.partArr = [];
 
         this.running = false;
-
-        /*
-        <canvas id="gameSurface" width="600" height="600"></canvas>
-        <canvas id="particles" width="600" height="600"></canvas>
-        <canvas id="text" width="600" height="600"></canvas>
-        //*/
-
-
-
-
-        //Creating a WebGL Context Canvas
-        //this.canvas = _canvas;
-        //this.gl = _gl;
-
-        //_canvas, _gl,_txtCTX,_partCTX
-
-        // Creating a 2D Canvas for displaying text
-        //this.txtCTX = _txtCTX;
-       
-        // Creating a 2D Canvas for particles
-        //this.partCTX = _partCTX;
 
         // Vertex and fragement shader source
         var vertCode = [
@@ -151,8 +111,6 @@ class Game {
         this.gl.vertexAttribPointer(coord, 3, this.gl.FLOAT, false, 0, 0);
         this.gl.enableVertexAttribArray(coord);
 
-        //mainGameObj.update();
-
     }
 
     //-----------------------------------------------------
@@ -190,7 +148,6 @@ class Game {
     {
         this.startingBact = _startingBact;
     } // End setStartingBact()
-
 
     //-----------------------------------------------------
     // Method: getBactArr() 
@@ -244,7 +201,9 @@ class Game {
             //tempBact.r = 0.05; 
             // check if coll
             for (let j = 0; j <= i; j++) {
-                if (this.collision(tempBact, this.bactArr[j])) {
+                //if (this.collision(tempBact, this.bactArr[j])) 
+                if(tempBact.hasCollided(this.bactArr[j]))
+                {
                     collFlag = true;
                     break;
                 }
@@ -261,77 +220,55 @@ class Game {
         }
         this.disk.draw();
 
-        //this.disk.draw();
-        //var x = function(){this.disk.draw();};
-
-        
-        //x();
-
-        //g_frameUpdateEventHndlr.addCallback(this.disk.draw);
-
-
-
+        // Start Frame Event Handler
         g_frameUpdateEventHndlr.running = true;
 
-        /*
-        this.txtCTX.font = "40px Verdana";
-        this.txtCTX.textAlign = "center";
-        this.txtCTX.textBaseline = "middle";
-        this.txtCTX.fillText("+", (this.canvas.width/2), (this.canvas.height/2));
-        //*/
-
-        //console.log(this.canvas.width + this.canvas.offsetLeft,this.canvas.height + this.canvas.offsetTop)
-        //debugger
-        //this.particle = new Particle(300, 300, 5, [0,1,0,0.5]);
-        //this.particle.draw(this.partCTX);
-        //debugger
-        
-
-        //this.createExplosionAtBacteria(this.bactArr[0]);
-
     }
 
+    //-----------------------------------------------------
+    // Method: end() 
+    // Descritption: Ends the game
+    //-----------------------------------------------------
     end()
     {
+        // Check If game is running
+        if(this.running){
 
+            if(this.isWin())
+            {   
+                // Display win massage
+                this.txtCTX.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                this.txtCTX.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                this.txtCTX.fillStyle = "rgba(0, 255, 0, 1.0)";
+                this.txtCTX.font = "80px Verdana";
+                this.txtCTX.textAlign = "center";
+                this.txtCTX.textBaseline = "middle";
+                this.txtCTX.fillText("You win!", (this.canvas.width/2), (this.canvas.height/2));
+                
+            }
+            else
+            {
+                // Empty Bact array
+                for (let i = 0; i < this.bactArr.length; i++) {
+                    this.destroy(i);
+                }
+
+                 // Display win massage
+                this.txtCTX.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                this.txtCTX.textAlign = "center";
+                this.txtCTX.textBaseline = "middle";
+                this.txtCTX.font = "80px Verdana";
+                this.txtCTX.fillStyle = "red";
+                this.txtCTX.fillText("Game over",(this.canvas.width/2), (this.canvas.height/2));
+                this.txtCTX.font = "40px Verdana";
+                this.txtCTX.fillText("You lose...",(this.canvas.width/2), (this.canvas.height/2)+50);
+            }
+
+            // Reset Running flag
+            this.running = false;           
+        }    
+        
     }
-
-    createExplosionAtBacteria(bac){
-		// Convert Bacteria(WebGL) data into canvas data
-		let bacX = (bac.x + 2/75 + 1) * 300;
-		let bacY = -1 * (bac.y-1) * 300 - 8;
-		let r = (((bac.x + bac.r) + 2/75 + 1) * 300) - bacX;
-		let num = 0;
-		let pColor = bac.color;
-
-        var reduceVariable = 90;
-
-		// Loops through the bacteria's x and y and spawn particles there
-		for(let x = 0; x < r; x++){
-			for(let y = 0; y < r; y++){
-				//Helps decrease amount of particles
-				if(num % reduceVariable == 0) {
-
-					let ppX = bacX + x;
-					let ppY = bacY + y;
-					let npX = bacX - x;
-					let npY = bacY - y;
-
-					// Create a corresponding particle for each "quandrant" of the bacteria
-					let particle = new Particle(ppX, ppY, 5, bac.color);
-					this.partArr.push(particle);
-					particle = new Particle(npX, npY, 5, bac.color);
-					this.partArr.push(particle);
-					particle = new Particle(ppX, npY, 5, bac.color);
-					this.partArr.push(particle);
-					particle = new Particle(npX, ppY, 5, bac.color);
-					this.partArr.push(particle);
-
-				}
-				num++;
-			}
-		}
-	}
 
     //-----------------------------------------------------
     // Method: update() 
@@ -345,22 +282,10 @@ class Game {
                 element.draw(this.partCTX);
             });
 
-        /*
-        // Update Bacteria
-        for (let i = 0; i < this.bactArr.length; i++) 
-        {
-            var fnPtr = function(){alert("hello");}
-            //this.bactArr[i].update(function(){alert("hello");})
-        }
-        */
-
-        //function destroyCal
-
-        //*
+       
         this.bactArr.forEach(tempBact => {
             tempBact.update()
         });
-        //*/
 
         // Update disk
         this.disk.draw(this.gl, this.fColor);
@@ -373,28 +298,30 @@ class Game {
 
                 //check threshold, destroy bacteria
                 if (this.bactArr[i].getRadius() > 0.3) {
-                    // if (!this.lose()) {
-                    //this.loseScore();
-                    //this.loseLive();
+                    this.loseScore();
+                    this.loseLive();
                     this.destroy(i);
-                    // }
                 }
                 else {
                     //check collision
                     for (let j = 0; j < i; j++) {
                         if (this.bactArr[i] != this.bactArr[j]) {
-                            if (this.collision(this.bactArr[i], this.bactArr[j])) {
+                            //if (this.collision(this.bactArr[i], this.bactArr[j]))
+                            if (this.bactArr[i].hasCollided(this.bactArr[j]))
+                            {
                                 //if there is collision, larger one consume it
                                 if (this.bactArr[i].getRadius() >= this.bactArr[j].getRadius()) {
                                     this.bactArr[i].setRadius(this.bactArr[i].getRadius() + 0.01);
-                                    this.loseScore();
-                                    this.destroy(j);
+                                    //this.loseScore();
+                                    this.bactArr.splice(j,1);
+                                    //this.destroy(j);
                                     break;
                                 }
                                 else {
                                     this.bactArr[j].setRadius(this.bactArr[j].getRadius() + 0.01);
-                                    this.loseScore();
-                                    this.destroy(i);
+                                    //this.loseScore();
+                                    //this.destroy(i);
+                                    this.bactArr.splice(i,1);
                                     break;
                                 }
                             }
@@ -402,15 +329,12 @@ class Game {
                     }
                 }
             }
-            /*
-            if (this.lose()) {
-                this.running = false;
-            }
+
+
+            if (this.isWin()) this.end()
             
-            if (this.win()) {
-                this.running = false;
-            }
-            */
+            if (this.isLose())  this.end();
+
         }
 
 		//document.getElementById('bacRemaining').innerHTML=bacRemaining;
@@ -427,11 +351,10 @@ class Game {
         this.y = 0;
         this.alive = false;
 
-        this.createExplosionAtBacteria(this.bactArr[index]);
-        // Remove destroyed bacteria from the bacteria array
+        this.bactArr[index].explode(this.partArr);
         this.bactArr.splice(index, 1);
     }
-
+    /*
     //-----------------------------------------------------
     // Method: destroy() 
     // Descritption: Destroy the bacteria by its index
@@ -450,6 +373,7 @@ class Game {
     
         return false;
     }
+    //*/
 
     //-----------------------------------------------------
     // Method: loseLive() 
@@ -458,7 +382,6 @@ class Game {
     loseLive() {
         if (this.lives > 0) {
             this.lives--;
-            //document.getElementById("live").innerHTML = this.lives;
         }
     }
 
@@ -469,7 +392,6 @@ class Game {
     loseScore() {
         if (this.score > 3) {
             this.score -= 3;
-            //document.getElementById("score").innerHTML = this.score;
         }
     }
 
@@ -479,71 +401,24 @@ class Game {
     //-----------------------------------------------------
     gainScore() {
         this.score += 100;
-        //document.getElementById("score").innerHTML = this.score;
     }
-
-
-    /*
     //-----------------------------------------------------
-    // Method: win() 
+    // Method: isWin() 
     // Descritption: Checking if the user win the game
     //-----------------------------------------------------
-    win() {
-        if (this.bactArr.length == 0 && this.lives >= 1) {
-            // debugger;
-            //alert("YOU WIN!");
-            
-            this.txtCTX.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-
-            this.txtCTX.clearRect(0, 0, this.canvas.width, this.canvas.height);
-			this.txtCTX.fillStyle = "rgba(0, 255, 0, 1.0)";
-            this.txtCTX.font = "80px Verdana";
-            this.txtCTX.textAlign = "center";
-            this.txtCTX.textBaseline = "middle";
-            this.txtCTX.fillText("You win!", (this.canvas.width/2), (this.canvas.height/2));
-
-			//this.txtCTX.fillText("You win!", 300, 300);
-
-            
-
-			//this.txtCTX.font = "80px Verdana";
-            //this.txtCTX.fillText("Game over", 300, 300);
-
-            //this.txtCTX.font = "40px Verdana";
-            //this.txtCTX.textAlign = "center";
-            //this.txtCTX.textBaseline = "middle";
-			///this.txtCTX.fillText("+", 300, 300);
-
-            return true;
-        }
-        return false;
-    }
+    isWin()
+    {
+        return (this.bactArr.length == 0 && this.lives >= 1)
+    } // isWin()
 
     //-----------------------------------------------------
     // Method: lose() 
     // Descritption: Checking if the user lose the game
     //-----------------------------------------------------
-    lose() {
-        if (this.lives == 0) {
-            for (let i = 0; i < this.bactArr.length; i++) {
-                this.destroy(i);
-            }
-            this.txtCTX.clearRect(0, 0, this.canvas.width, this.canvas.height);
-			this.txtCTX.font = "80px Verdana";
-			this.txtCTX.fillStyle = "red";
-			this.txtCTX.fillText("Game over", 300, 300);
-			this.txtCTX.font = "40px Verdana";
-			this.txtCTX.fillText("You lose...", 310, 355);
 
-            //alert("YOU LOSE!");
-            //this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-			//this.ctx.font = "80px Verdana";
-			//this.ctx.fillStyle = "red";
-			//this.ctx.fillText("Game over", 300, 300);
-            return true;
-        }
-        return false;
-    }
-    //*/
+    isLose()
+    {    
+        return (this.lives == 0)
+    } // End isLose()
 }

@@ -1,37 +1,8 @@
 let mainGameObj;
-//let somethingCount;
 let g_frameUpdateEventHndlr;
-//let g_clickEventHndlr;
-
 
 function _init() 
 {
-    //var x = document.createElement("CANVAS");
-    //document.body.appendChild(x);
-    /*
-    var node = document.createElement("CANVAS")
-    node.setAttribute("id","gameSurface");
-    node.setAttribute("height","600");
-    node.setAttribute("width","600");
-
-    document.getElementById("test").appendChild(node);
-    //*/
-
-    // Creating a WebGL Context Canvas
-    //var canvas = document.getElementById('gameSurface');
-
-    
-    /*
-    var gl = canvas.getContext('webgl');
-
-	// Creating a 2D Canvas for displaying text
-	var textCanvas = document.getElementById('text');
-    var txtCTX = textCanvas.getContext('2d')
-    
-	// Creating a 2D Canvas for particles
-	var particlesCanvas = document.getElementById('particles');
-    var partCTX = particlesCanvas.getContext('2d');
-    */
 
     //-----------------------------------------------------------------------
     // Update EventHndlr
@@ -68,35 +39,19 @@ function _init()
     // Start Game
     mainGameObj.start();
 
-    // Start UpdateEventHndlr
-    //g_frameUpdateEventHndlr.running = true;
+    // Start
     window.requestAnimationFrame(g_frameUpdateInterupt);
 
-
-    /*
-    g_clickEventHndlr = new EventHndlr();
-
-    mainGameObj.bactArr.forEach(tempBact => {
-        g_frameUpdateEventHndlr.addCallback(tempBact.click);
-    });
-    */
-    
-
-//*
     let canvas = mainGameObj.getCanvas();
-    mainGameObj.getCanvas().onmousedown = function (e, _canvas) {
-        var scaleCood = [];
-        scaleCood[1] = scaleInRange(e.clientY, 0, canvas.height, -1, 1);
-        scaleCood[0] = scaleInRange((canvas.width - e.clientX), 0, canvas.width, -1, 1)
+    canvas.onmousedown = function (e, _canvas) {
 
-        // scaledY = scaleInRange(e.clientY, 0, canvas.height, -1, 1);
-        // scaledX = scaleInRange((canvas.width - e.clientX), 0, canvas.width, -1, 1)
+        var scale = [[0,canvas.width,-1,1], [0, canvas.height,-1,1]];
+        var cursorCood = [(canvas.width - e.clientX),e.clientY];
+        var scaleCood = transform1(cursorCood,scale)
 
-        //g_frameUpdateEventHndlr.handle(scaleCood)
-        //g_clickEventHndlr(scaledX, scaledY);
+        //console.log(scaleCood);
         g_clickEventHndlr(scaleCood);
     };
-    //*/
 
 }
 
@@ -136,9 +91,44 @@ function g_clickEventHndlr(_x, _y) {
 function scaleInRange(_x, _minIn, _maxIn, _minOut, _maxOut) {
     return Math.round((((_maxIn - _minIn) / (_maxOut - _minOut)) - _x) * (_maxOut - _minOut) / (_maxIn - _minIn) * 100) / 100
 }
+
+//---------------------------------------------------------
+// scaleInRange
+//---------------------------------------------------------
+
+function transform(_in, _scale1,_scale2) {
+    var out = []
+    /*
+    for (let index = 0; index < _in.length; index++) {
+        out[index] =  Math.round((((_maxIn - _minIn) / (_maxOut - _minOut)) - _in[index]) * (_maxOut - _minOut) / (_maxIn - _minIn) * 100) / 100
+        
+    }
+    //*/
+
+    out[0] =  Math.round((((_scale1[1] - _scale1[0]) / (_scale1[3] - _scale1[2])) - _in[0]) * (_scale1[3] - _scale1[2]) / (_scale1[1] - _scale1[0]) * 100) / 100
+
+    out[1] =  Math.round((((_scale2[1] - _scale2[0]) / (_scale2[3] - _scale2[2])) - _in[1]) * (_scale2[3] - _scale2[2]) / (_scale2[1] - _scale2[0]) * 100) / 100
+
+    //out[1] =  Math.round((((_maxIn - _minIn) / (_maxOut - _minOut)) - _in[1]) * (_maxOut - _minOut) / (_maxIn - _minIn) * 100) / 100
+    return out;
+}
+
+//---------------------------------------------------------
+// scaleInRange
+//---------------------------------------------------------
+
+function transform1(_in, _scale) {
+    var out = []
+    for (let i = 0; i < _in.length; i++) 
+        out[i] =  Math.round((((_scale[i][1] - _scale[i][0]) / (_scale[i][3] - _scale[i][2])) - _in[i]) * (_scale[i][3] - _scale[i][2]) / (_scale[i][1] - _scale[i][0]) * 100) / 100     
+    
+   
+    return out;
+}
  
 //---------------------------------------------------------
 // EventHndlr
+
 //---------------------------------------------------------
 
 class EventHndlr

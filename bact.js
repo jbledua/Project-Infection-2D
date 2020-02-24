@@ -130,18 +130,73 @@ class Bact extends Circle {
         return false;
     }
 
+    explode(_partArr)
+    {
+        //partArr = 
+        // Convert Bacteria(WebGL) data into canvas data
+		let bacX = (this.x + 2/75 + 1) * 300;
+		let bacY = -1 * (this.y-1) * 300 - 8;
+		let r = (((this.x + this.r) + 2/75 + 1) * 300) - bacX;
+		let num = 0;
+		let pColor = this.color;
+
+        var reduceVariable = 90;
+
+		// Loops through the bacteria's x and y and spawn particles there
+		for(let x = 0; x < r; x++){
+			for(let y = 0; y < r; y++){
+				//Helps decrease amount of particles
+				if(num % reduceVariable == 0) {
+
+					let ppX = bacX + x;
+					let ppY = bacY + y;
+					let npX = bacX - x;
+					let npY = bacY - y;
+
+					// Create a corresponding particle for each "quandrant" of the bacteria
+					let particle = new Particle(ppX, ppY, 5, this.color);
+					_partArr.push(particle);
+					particle = new Particle(npX, npY, 5, this.color);
+					_partArr.push(particle);
+					particle = new Particle(ppX, npY, 5, this.color);
+					_partArr.push(particle);
+					particle = new Particle(npX, ppY, 5, this.color);
+					_partArr.push(particle);
+
+				}
+				num++;
+			}
+		}
+    }
+
     hasCollided(_bact)
     {
 
         var xDist = this.x - _bact.getX();
         var yDist = this.y - _bact.getY();
+        var rad = this.r + _bact.getRadius();
 
         var totalDist = Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2));
 
-        if ((totalDist - this.r) < 0) {
+        if ((totalDist - rad) < 0) {
             return true;
         }
 
+        return false;
+    }
+
+
+    collision(bact1, bact2) {
+        var xDist = bact2.getX() - bact1.getX();
+        var yDist = bact2.getY() - bact1.getY();
+        var rad = bact1.getRadius() + bact2.getRadius();
+    
+        var totalDist = Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2));
+    
+        if ((totalDist - rad) < 0) {
+            return true;
+        }
+    
         return false;
     }
 }
