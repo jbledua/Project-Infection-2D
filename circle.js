@@ -1,9 +1,11 @@
 class Circle
 {
-    constructor(x, y, r, color){
+    constructor(gl,x, y, r,fColor, color){
+        this.gl = gl;
         this.x = x;
         this.y = y;
         this.r = r;
+        this.fColor = fColor;
 		this.color = color;
     }
 

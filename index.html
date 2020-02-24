@@ -10,16 +10,14 @@
     <script src="circle.js"> </script>
     <script src="disk.js"> </script>
     <script src="bact.js"></script>
+    <script src="particle.js"></script>
 </head>
 
-<body onload="startGame()">
-    <div class="container">
-        <canvas id="gameSurface" width="600" height="600"></canvas>
-        <canvas id="particles" width="600" height="600"></canvas>
-        <canvas id="text" width="600" height="600"></canvas>
-    </div>
-    <h1>Lives left: <span id="live">2</span></h1>
-    <h1>Scores: <span id="score">0</span></h1>
+<body onload="_init()">
+    <div id="game"></div>
+    <p>Lives left: <span id="lives"></span></p>
+    <p>Score: <span id="score"></span></h1>
+    <p>Bacteria Remaining: <span id="bacteria"></span></p>
 </body>
 
 </html>

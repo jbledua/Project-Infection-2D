@@ -421,7 +421,7 @@ var main = function() {
 			this.y = y;
 			this.r = r + Math.random() * 5;
 			// Convert 1.0, 1.0, 1.0 rgb data to 255, 255, 255
-			this.color = "rgba(" + Math.round((1*color[0]) * 255) + "," + Math.round((1*color[1]) * 255) + "," + Math.round((1*color[2]) * 255) + "," + Math.random()*0.85 + ")";
+			//this.color = "rgba(" + Math.round((1*color[0]) * 255) + "," + Math.round((1*color[1]) * 255) + "," + Math.round((1*color[2]) * 255) + "," + Math.random()*0.85 + ")";
 			this.speed = {
 				x: -1 + Math.random() * 3,
 				y: -1 + Math.random() * 3

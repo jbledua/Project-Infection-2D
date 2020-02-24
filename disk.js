@@ -1,20 +1,20 @@
 class Disk extends Circle
 {
-  constructor(_x, _y, _r, _color)
+  constructor(_gl, _x, _y, _r,_fColor ,_color)
   {
     // Set Defaults
     if(typeof _x == "undefined") _x = 0
     if(typeof _y == "undefined") _y = 0
     if(typeof _r == "undefined") _r = 0.8
-    if(typeof _color == "undefined") _color = [0.05, 0.1, 0.05, 0.5]
-    super(_x, _y, _r, _color);
+    if(typeof _color == "undefined") _color = [0.1, 0.1, 0.1, 0.5]
+    super(_gl, _x, _y, _r,_fColor ,_color);
   }
 
   // Moved from circle class
-  draw(_gl,_fColor)
+  draw()
   {
-      this.gl = _gl;
-      this.fColor = _fColor;
+      //this.gl = _gl;
+      //this.fColor = _fColor;
 
     // For storing the produces vertices
     var vertices = [];

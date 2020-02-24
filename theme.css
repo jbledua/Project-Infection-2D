@@ -1,11 +1,25 @@
+/*
 .container {
     position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
+  #gameSurface
+  {
+    pointer-events: none;
+    left: 0px;
+    top: 0px;
+    z-index: 0;
+  }
+  */
 #text {
   position: absolute;
   pointer-events: none;
   left: 0px;
   top: 0px;
+  /*
+  */
   z-index: 10;
 }
 #particles {
@@ -13,12 +27,10 @@
   pointer-events: none;
   left: 0px;
   top: 0px;
+  /*
+  */
   z-index: 2;
 }
 p {
-  color:blue;
-}
-canvas
-{
-  height: 80%;
+  color:black;
 }
